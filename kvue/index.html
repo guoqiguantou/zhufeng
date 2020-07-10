@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<title></title>
+</head>
+
+<body>
+	<div id="app">
+		<p>{{aa}}</p>
+		<p>{{aa}}</p>
+		<p>{{aa}}</p>
+		<p k-text="aa"></p>
+		<p>{{age}}</p>
+		<input type="text" k-model="aa">
+		<button @click="changeName">呵呵</button>
+		<div k-html="html"></div>
+	</div>
+</body>
+<script src='./kvue.js'></script>
+<script src='./compile.js'></script>
+<script>
+	//实现 KVue class 
+	//data this代理
+	//data 数据拦截
+	//watcher
+	//dep
+	//compile
+
+	// 一个key对应一个dep  一个dep对应多个 watcher
+
+
+	const kaikeba = new KVue({
+		el: '#app',
+		data: {
+			aa: "I am test.",
+			obj:{
+				name:'11'
+			},
+			age: 12,
+			html: '<button>这是⼀个按钮</button>'
+		},
+		created() {
+			this.aa='aa'
+			// this.aa='aa11111'
+			// this.changeName();
+			// setTimeout(() => {
+			// 	this.aa = '我是测试'
+			// }, 1500)
+		},
+		methods: {
+			changeName() {
+				this.aa = '哈喽，开课吧'
+				this.age = 1
+			}
+		}
+	})
+</script>
+
+</html>
