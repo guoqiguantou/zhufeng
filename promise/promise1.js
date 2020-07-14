@@ -1,4 +1,7 @@
 //手写promise
+
+const { resolve } = require("path");
+
 /*
 1、new Promise 需要传递一个executor执行器 立即执行
 2、executor接受两个参数resolve, reject
@@ -52,12 +55,21 @@ class Promise {
     }
   }
   then(onFulfilled, onRejected) {
+    onFulfilled = typeof onFulfilled == 'function' ? onFulfilled : data => data
+    onRejected = typeof onRejected == 'function' ? onRejected : err => { throw err }
     let promise2 = new Promise((resolve, reject) => {
       if (this.status == RESOLVE) {
         setTimeout(() => {
           try {
-            let x = onFulfilled(this.value);
-            resolvePromise(promise2, x, resolve, reject)
+            if (isPromise(this.value)) {
+              this.value.then((data) => {
+                let x = onFulfilled(data);
+                resolvePromise(promise2, x, resolve, reject)
+              }, onRejected)
+            } else {
+              let x = onFulfilled(this.value);
+              resolvePromise(promise2, x, resolve, reject)
+            }
           } catch (error) {
             reject(error)
           }
@@ -78,14 +90,21 @@ class Promise {
         this.onFulfilled.push(() => {
           setTimeout(() => {
             try {
-              let x = onFulfilled(this.value)
-              resolvePromise(promise2, x, resolve, reject)
+              if (isPromise(this.value)) {
+                this.value.then((data) => {
+                  let x = onFulfilled(data);
+                  resolvePromise(promise2, x, resolve, reject)
+                }, onRejected)
+              } else {
+                let x = onFulfilled(this.value);
+                resolvePromise(promise2, x, resolve, reject)
+              }
             } catch (error) {
               reject(error)
             }
           })
         })
-        onRejected && this.onRejected.push(() => {
+        this.onRejected.push(() => {
           setTimeout(() => {
             try {
               let x = onRejected(this.error)
@@ -97,26 +116,72 @@ class Promise {
         })
       }
     })
-
     return promise2
+  }
+  catch(onReject) {
+    return this.then(null, onReject)
   }
 }
 
 function resolvePromise(promise2, x, resolve, reject) {
   if (promise2 === x) {
     reject(new TypeError(' Chaining cycle detected for promise #<Promise>'))
-  } else if (typeof x == 'object' && x !== null || typeof x === 'function') {
-    let then=x.then;
-    if(typeof then =='function'){
-      then.call(x,(data)=>{
-        resolve(data)
-      },(err)=>{
+  } else if (typeof x == 'object' && (x !== null) || typeof x === 'function') {
+    let then = x.then;
+    if (typeof then == 'function') {
+      then.call(x, y => {
+        resolvePromise(promise2, y, resolve, reject)
+      }, (err) => {
         reject(err)
       })
     }
-  }else{
+  } else {
     resolve(x)
   }
 }
 
+function isPromise(x) {
+  if (typeof x == 'object' && (x != null) || typeof x === 'function') {
+    if (typeof x.then == 'function') {
+      return true
+    }
+  } else {
+    return false
+  }
+}
+
+//当所有的promise状态都成功，promise状态才变成成功
+//其中一个promise状态变成失败，promise状态就失败了
+Promise.all = function (promises) {
+  let promise = new Promise((resolve, reject) => {
+    let arr = []
+    let i = 0;
+    let rejectFunc = () => {
+      if (i++ == promises.length - 1) {
+        resolve(arr)
+      }
+    }
+    for (let i = 0; i < promises.length; i++) {
+      if (isPromise(promises[i])) {
+        promises[i].then(res => {
+          arr[i] = res;
+          rejectFunc()
+        }, reject)
+      } else {
+        arr[i] = promises[i];
+        rejectFunc()
+      }
+    }
+  })
+  return promise
+}
+
+Promise.defer = Promise.deferred = function () {
+  let dfd = {};
+  dfd.promise = new Promise((resolve, reject) => {
+    dfd.resolve = resolve;
+    dfd.reject = reject;
+  });
+  return dfd;
+}
 module.exports = Promise
