@@ -15,8 +15,9 @@ const { resolve } = require("path");
 7、promise可以then多次，每次then都返回一个新的promise实例
 8、如果then返回的是一个普通值，那么会将这个普通值作为参数，传递给下一个then成功时的回调；
 如果then抛出了异常，那么会将这个异常作为参数，传递给下一个then失败时的回调
-如果then返回 一个promise 需要等这个promise执行完，如果promise成功 那么会将成功的值作为参数 传递给下一个then作为成功时的回调
+如果then返回 一个promise 需要等这个promise执行完，如果promise成功 那么会将成功的值(可能还是一个promise 需要递归调用)作为参数 传递给下一个then作为成功时的回调
 如果promise失败 会将失败的原因作为参数 传递给下一个then失败时的回调
+9、resolve函数的参数除了正常的值以外，还可能是另一个 Promise 实例，这时外层promise状态由传入的resolve promise状态决定
 
 */
 const PENDING = 'PENDING';
@@ -119,7 +120,7 @@ class Promise {
     return promise2
   }
   catch(onReject) {
-    return this.then(null, onReject)
+    return this.then(undefined, onReject)
   }
 }
 
