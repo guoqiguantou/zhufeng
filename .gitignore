@@ -1,0 +1,8 @@
+.idea
+node_modules
+npm-debug.log
+# dist
+package-lock.json
+.DS_Store
+# luxury.release
+.history/

@@ -13,9 +13,11 @@ const Promise = require("./promise1")
 
 // .catch(error => console.log(error))
 
-
+let p1=new Promise((resolve, reject)=>{
+  resolve('aa')
+})
 const promise = new Promise(function (resolve, reject) {
-  reject(1212)
+  resolve(p1)
 })
 // promise.then((data) => {
 //   return new Promise(function (resolve, reject) {
