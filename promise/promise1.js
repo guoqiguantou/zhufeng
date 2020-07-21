@@ -18,7 +18,7 @@ const { resolve } = require("path");
 如果then返回 一个promise 需要等这个promise执行完，如果promise成功 那么会将成功的值(可能还是一个promise 需要递归调用)作为参数 传递给下一个then作为成功时的回调
 如果promise失败 会将失败的原因作为参数 传递给下一个then失败时的回调
 9、resolve函数的参数除了正常的值以外，还可能是另一个 Promise 实例，这时外层promise状态由传入的resolve promise状态决定
-
+10、promiseAll
 */
 const PENDING = 'PENDING';
 const RESOLVE = 'RESOLVE';
@@ -119,6 +119,21 @@ class Promise {
     })
     return promise2
   }
+  // finally(fn){
+  //   return this.then((value)=>{
+  //     console.log(value,'------------')
+  //     fn()
+  //   }, ()=>{
+  //     fn()
+  //   })
+  // }
+  finally (callback) {
+    let P = this.constructor;
+    return this.then(
+      value  => P.resolve(callback()).then(() => value),
+      reason => P.resolve(callback()).then(() => { throw reason })
+    );
+  };
   catch(onReject) {
     return this.then(undefined, onReject)
   }
@@ -177,6 +192,36 @@ Promise.all = function (promises) {
   return promise
 }
 
+Promise.race=function(promises){
+  let promise = new Promise((resolve, reject) => {
+    let arr = []
+    let i = 0;
+    let rejectFunc = () => {
+      if (i++ == promises.length - 1) {
+        resolve(arr)
+      }
+    }
+    for (let i = 0; i < promises.length; i++) {
+      if (isPromise(promises[i])) {
+        promises[i].then(res => {
+          resolve(res);
+        }, reject)
+      } else {
+        resolve(promises[i]);
+      }
+    }
+  })
+  return promise
+}
+Promise.resolve=function(value){
+  if(isPromise(value)){
+    return value
+  }
+  return new Promise((resolve, reject)=>{
+    resolve(value)
+  })
+}
+
 Promise.defer = Promise.deferred = function () {
   let dfd = {};
   dfd.promise = new Promise((resolve, reject) => {
@@ -186,3 +231,9 @@ Promise.defer = Promise.deferred = function () {
   return dfd;
 }
 module.exports = Promise
+
+/*
+  1、Promise.prototype.finally() finally()方法用于指定不管 Promise 对象最后状态如何，都会执行的操作
+  2、Promise.race() 上面代码中，只要p1、p2、p3之中有一个实例率先改变状态，p的状态就跟着改变。那个率先改变的 Promise 实例的返回值，就传递给p的回调函数。
+  3、Promise.resolve() 有时需要将现有对象转为 Promise 对象，方法就起到这个作用。
+*/

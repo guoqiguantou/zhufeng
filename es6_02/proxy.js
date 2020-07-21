@@ -4,20 +4,29 @@ let obj = {
     count: 20
   }
 }
-
-let newObj=new Proxy(obj,{
+let handle={
   set(target,key,value,receiver){
     console.log('set',key)
     return Reflect.set(target, key, value,receiver)
   },
   get(target,key,receiver){
     console.log('get',key)
+    if(typeof target[key] =='object'){
+      return new Proxy(target[key],handle)
+    }
     return Reflect.get(target, key, receiver)
   }
-})
-newObj.name='李四'
-newObj.age.count=18
-console.log(newObj.name)
+}
+
+// let newObj=new Proxy(obj,handle)
+// newObj.name='李四'
+// newObj.age.count=18
+// console.log(newObj.name)
+
+let arr=[1,2,3,4]
+let newArr=new Proxy(arr,handle)
+newArr.push(676)
+console.log(arr)
 
 
 
