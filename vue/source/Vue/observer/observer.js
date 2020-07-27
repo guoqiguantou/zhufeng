@@ -1,16 +1,21 @@
 import { observer } from './index'
 import { arrayMethods, observerArray } from './array'
+import Dep from '../dep'
 function defineReactive(obj, key, value) {
     observer(value)
+    let dep=new Dep() //一个属性对应一个dep
+    
     Object.defineProperty(obj, key, {
         set(newValue) {
             if (value === newValue) { return }//判断数据没变不进行修改
-            console.log('设置属性' + key)
             observer(newValue)//对新增的属性值进行监控
             value = newValue
+            dep.notify()
         },
         get() {
-            console.log('获取属性' + key)
+            if(Dep.target){ //这时候是渲染watch
+                dep.depend(Dep.target) //将渲染watch 添加到dep的watchers
+            }
             return value
         }
     })
@@ -25,7 +30,6 @@ class Observer {
         } else {
             this.walk(data)
         }
-
     }
 
     walk(data) {

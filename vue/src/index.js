@@ -6,12 +6,11 @@ let vm = new Vue({
         return {
             school: {
                 name: 'zf',
-                
                 age: 11,
-                a1:[1,2]
+                a1: [1, 2]
             },
-            msg: 'msg',
-            arr: [{name:1}, 2, 3, 4]
+            msg: 'msg11111111111111',
+            arr: [{ name: 1 }, 2, 3, 4]
         }
     },
     computed: {
@@ -19,12 +18,15 @@ let vm = new Vue({
     },
     watch: {}
 })
+setTimeout(function () {
+    vm.school.name = 'zhu Feng'
+}, 1000)
 // console.log(vm.arr.push({name:1}))
 // console.log(vm.arr[0].name)
-vm.school.age={
-    count:20
-}
-console.log(vm.school.age.count)
+// vm.school.age={
+//     count:20
+// }
+// console.log(vm.school.age.count)
 
 //vue数组劫持的缺点
 // 没有办法监控索引
