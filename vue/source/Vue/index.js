@@ -32,13 +32,14 @@ const util={
     
 }
 function update(vm,el){
-    console.log(vm)
+    //创建dom碎片
     let fragment=document.createDocumentFragment();
     let first;
     while (first=el.firstChild){
         fragment.appendChild(first)
     }
     compile(vm,fragment) 
+    //插入el
     el.appendChild(fragment)
 }
 function compile(vm,fragment){
@@ -66,7 +67,6 @@ function mountComponent(vm,el){
     new Watcher(vm, updateComponent)
 }
 Vue.prototype._mount=function(){
-    console.log('mount')
     let vm=this;
     vm.$el= util.query(vm.$options.el);
     mountComponent(vm,vm.$el)
