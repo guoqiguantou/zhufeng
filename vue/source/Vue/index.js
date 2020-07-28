@@ -1,5 +1,5 @@
 import {initState} from './observer'
-import Watcher from './watcher'
+import Watcher from './observer/watcher'
 //这里使用es5的构造函数 而没有使用es6的类是因为构造函数比较方便拓展，可以吧方法写进多个文件
 function Vue(options){
     this._init(options)
@@ -31,17 +31,7 @@ const util={
     },
     
 }
-function update(vm,el){
-    //创建dom碎片
-    let fragment=document.createDocumentFragment();
-    let first;
-    while (first=el.firstChild){
-        fragment.appendChild(first)
-    }
-    compile(vm,fragment) 
-    //插入el
-    el.appendChild(fragment)
-}
+
 function compile(vm,fragment){
     if(!fragment.childNodes) return
     fragment.childNodes.forEach(node=>{
@@ -56,12 +46,12 @@ function compileText(vm,node){
     const defaultTagRE = /\{\{((?:.|\r?\n)+?)\}\}/g
     node.text=node.text?node.text:node.textContent
     node.textContent= node.text.replace(defaultTagRE,function(){
-        return util.getValue(vm,RegExp.$1)
+        return  JSON.stringify(util.getValue(vm,RegExp.$1))
     })
 }
 function mountComponent(vm,el){
     let updateComponent=()=>{
-        update(vm,el)
+        vm._update(vm,el)
     }
     //渲染watcher
     new Watcher(vm, updateComponent)
@@ -71,6 +61,17 @@ Vue.prototype._mount=function(){
     vm.$el= util.query(vm.$options.el);
     mountComponent(vm,vm.$el)
 }
-
+Vue.prototype._update=function(vm,el){
+    console.log('update')
+    //创建dom碎片
+    let fragment=document.createDocumentFragment();
+    let first;
+    while (first=el.firstChild){
+        fragment.appendChild(first)
+    }
+    compile(vm,fragment) 
+    //插入el
+    el.appendChild(fragment)
+}
 
 export default Vue

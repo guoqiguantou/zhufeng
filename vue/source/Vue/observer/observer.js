@@ -1,6 +1,6 @@
 import { observer } from './index'
 import { arrayMethods, observerArray } from './array'
-import Dep from '../dep'
+import Dep from './dep'
 function defineReactive(obj, key, value) {
     observer(value)
     let dep=new Dep() //一个属性对应一个dep
