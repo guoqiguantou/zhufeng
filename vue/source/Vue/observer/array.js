@@ -35,7 +35,7 @@ arrMethods.forEach(method => {
         if(insert){
             observerArray(insert)
         }
-
+        this.__ob__.dep.notify();//数组监听
         console.log('数组方法重写')
         return r;
     }
