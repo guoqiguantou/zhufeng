@@ -2,9 +2,9 @@ import { observer } from './index'
 import { arrayMethods, observerArray } from './array'
 import Dep from './dep'
 function defineReactive(obj, key, value) {
-    let child=observer(value)
+    let childOb=observer(value)
     let dep=new Dep() //一个属性对应一个dep
-    console.log(child)
+    console.log(key,value,childOb)
     Object.defineProperty(obj, key, {
         set(newValue) {
             if (value === newValue) { return }//判断数据没变不进行修改
@@ -15,6 +15,9 @@ function defineReactive(obj, key, value) {
         get() {
             if(Dep.target){ //这时候是渲染watch
                 dep.depend(Dep.target) //将渲染watch 添加到dep的watchers
+                if(childOb){
+                    childOb.dep.depend(Dep.target)
+                }
             }
             return value
         }
@@ -23,8 +26,15 @@ function defineReactive(obj, key, value) {
 
 class Observer {
     constructor(data) {//这里的data指的是vm._data
-        this.dep=new Dep;
-        data.__ob__=this;
+        this.dep = new Dep()
+        this.data=data
+        Object.defineProperty(data.__proto__, '__ob__', {
+            value: this,
+            enumerable: true,
+            writable: true,
+            configurable: true
+        })
+
         //判断如果是数组 拦截数组方法
         if (Array.isArray(data)) {
             data.__proto__ = arrayMethods

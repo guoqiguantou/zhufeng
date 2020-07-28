@@ -20,7 +20,7 @@ let vm = new Vue({
 })
 setTimeout(function () {
     vm.msg = 'zhu Feng'
-    vm.arr.push = 'zhu99'
+    vm.arr.push('zhu99')
 }, 1000)
 // console.log(vm.arr.push({name:1}))
 // console.log(vm.arr[0].name)
