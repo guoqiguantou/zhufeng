@@ -1,4 +1,6 @@
 import Dep from './dep'
+import util from '../util'
+
 let id = 0
 class Watcher {
   constructor(vm, expOrFn, cd, options) {
@@ -7,25 +9,34 @@ class Watcher {
     this.cd = cd || function () { };
     this.options = options || {};
     this.id = id++;
-    if (typeof expOrFn == 'function') {
-      this.getter = expOrFn;
-    }
     this.deps = []
     this.depsId = new Set;
-    this.get()
 
+    if (typeof expOrFn == 'function') {
+      this.getter = expOrFn;
+    } else {
+      this.getter = () => util.getValue(vm, expOrFn);
+    }
+
+    if (this.options.user) {
+      this.user = this.options.user
+    }
+
+    this.value = this.get()
   }
   get() {
+    let value
     pushTarget(this)
-    this.getter()
+    value = this.getter()
     popTarget(this)
+    return value
   }
   update() {
-    console.log('queueWatcher')
+    // console.log('queueWatcher')
     //向队列中推入这个watcher
     queueWatcher(this)
   }
-
+  
   addDep(dep) {
     if (!this.depsId.has(dep.id)) {
       this.deps.push(dep);
@@ -34,8 +45,14 @@ class Watcher {
     }
   }
 
+  //执行watch
   run() {
-    this.get()
+    let value = this.get()
+    const oldValue = this.value
+    this.value=value;
+    if (this.user) {
+      this.cd.call(this.vm, value, oldValue)
+    }
   }
 }
 

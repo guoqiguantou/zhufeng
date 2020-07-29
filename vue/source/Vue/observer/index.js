@@ -10,10 +10,10 @@ export function initState(vm) {
         initComputed()
     }
     if(opts.watch){
-        initWatch()
+        initWatch(vm)
     }
 }
-
+//获取Observer
 export function observer(data){
     if(typeof data !== 'object'||data==null){
         return 
@@ -54,6 +54,14 @@ function initComputed(){
 }
 
 //初始化watch
-function initWatch(){
+function initWatch(vm){
+    let watch=vm._watch=vm.$options.watch
+    for(let key in watch){
+        createWatcher(vm, key, watch[key])
+    }
+}
 
+//创建watch
+function createWatcher(vm, key, handler){
+    return vm.$watch(key, handler)
 }

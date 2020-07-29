@@ -15,9 +15,18 @@ let arrMethods = [
     'reverse'
 ]
 //观察数组
-export function observerArray(insert){
-    for(let i=0;i<insert.length;i++){
+export function observerArray(insert) {
+    for (let i = 0; i < insert.length; i++) {
         observer(insert[i])
+    }
+}
+//数组通知
+export function dependArray(value) {
+    for (let i = 0; i < value.length; i++) {
+        value[i].__ob__ && value[i].__ob__.dep.depend()
+        if (Array.isArray(value[i])) {
+            dependArray(value[i])
+        }
     }
 }
 arrMethods.forEach(method => {
@@ -29,14 +38,14 @@ arrMethods.forEach(method => {
         switch (method) {
             case 'push':
             case 'unshift': insert = args;
-            break;
-            case 'splice':insert=args[2]
+                break;
+            case 'splice': insert = args[2]
         }
-        if(insert){
+        if (insert) {
             observerArray(insert)
         }
         this.__ob__.dep.notify();//数组监听
-        console.log('数组方法重写')
+
         return r;
     }
 })

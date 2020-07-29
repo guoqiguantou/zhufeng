@@ -7,8 +7,8 @@ class Dep{
   add(watcher){
     this.watcher.push(watcher)
   }
-  depend(watcher){
-    watcher.addDep(this)
+  depend(){
+    Dep.target.addDep(this)
   }
   notify(){
     this.watcher.forEach(watch => {
