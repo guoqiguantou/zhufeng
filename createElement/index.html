@@ -25,7 +25,7 @@
 
 <body>
   <div id="app"></div>
-  <script src="./vdom.js"></script>
+  <script src="./vdom1.js"></script>
   <script>
     //1、createElemet 传入对象 生成虚拟dom  VNode
     /*
@@ -87,30 +87,61 @@
     */
 
     // 旧的 VNode
-    const prevVNode = createElement('div', {class:'app1',style:{border:'1px solid red'},'@click':()=>{alert('哈哈')}},[
-      createElement('p', { key: 'a'}, 'A'),
-      createElement('p', { key: 'b'}, 'B'),
-      createElement('p', { key: 'c'}, 'C'),
-      createElement('p', { key: 'd'}, 'D'),
+    const prevVNode = createElement('div', {
+      class: 'app1',
+      style: {
+        border: '1px solid red'
+      },
+      '@click': () => {
+        alert('哈哈')
+      }
+    }, [
+      createElement('p', {
+        key: 'a'
+      }, 'A'),
+      createElement('p', {
+        key: 'b'
+      }, 'B'),
+      createElement('p', {
+        key: 'c'
+      }, 'C'),
+      createElement('p', {
+        key: 'd'
+      }, 'D'),
     ])
 
     // 新的 VNode
-    const nextVNode = createElement('div', {class:'app1',style:{},'@click':()=>{alert('111')}},[
-      createElement('p', { key: 'b'}, 'B'),
-      createElement('p', { key: 'e'}, 'E'),
-      createElement('p', { key: 'c'}, 'C'),
-      createElement('p', { key: 'a'}, 'A'),
-    ] )
+    const nextVNode = createElement('div', {
+      class: 'app1',
+      style: {},
+      '@click': () => {
+        alert('111')
+      }
+    }, [
+      createElement('p', {
+        key: 'b'
+      }, 'B'),
+      createElement('p', {
+        key: 'e'
+      }, 'E'),
+      createElement('p', {
+        key: 'c'
+      }, 'C'),
+      createElement('p', {
+        key: 'a'
+      }, 'A'),
+    ])
 
+    // console.log(prevVNode)
+
+
+    // console.log(prevVNode)
     render(prevVNode, document.getElementById('app'))
-     setTimeout(function(){
+    setTimeout(function () {
       render(nextVNode, document.getElementById('app'))
-      console.log(nextVNode)
-   },1000)
-   
-
-
-</script>
+      // console.log(nextVNode)
+    }, 1000)
+  </script>
 </body>
 
 </html>

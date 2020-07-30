@@ -74,7 +74,7 @@ function mount(vnode, container, refNode) {
 
 function mountElement(vnode, container, refNode) {
   let dom = document.createElement(vnode.tag)
-  vnode.el = dom
+  
   //设置属性
   if (vnode.data && typeof vnode.data == 'object') {
     Object.keys(vnode.data).forEach(key => {
@@ -309,6 +309,4 @@ function patchChildren(prevChildFlags,
       }
       break;
   }
-
-
 }
