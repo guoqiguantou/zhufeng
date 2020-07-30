@@ -10,23 +10,29 @@ let vm = new Vue({
                 a1: [1, 2]
             },
             msg: 'msg11111111111111',
-            arr: [[[1]], 2, 3, 4]
+            arr: [[[1]], 2, 3, 4],
+            firstName:'Foo',
+            lastName:'Bar'
         }
     },
     computed: {
-
+        fullName:function() {
+            return this.firstName+this.lastName
+        }
     },
     watch: {
-        msg:function(newVal, oldVal){
+        msg: function (newVal, oldVal) {
             console.log(newVal, oldVal)
         },
     }
 })
-vm.msg='msg1234'
 
-// setTimeout(function () {
-//    
-// }, 1000)
+
+setTimeout(function () {
+    vm.firstName = 'msg1234'
+    vm.msg='1'
+    console.log(vm.fullName)
+}, 1000)
 
 // console.log(vm.arr.push({name:1}))
 // console.log(vm.arr[0].name)

@@ -1,6 +1,11 @@
 import Dep from './dep'
 import util from '../util'
 
+/*
+watcher一共有三种，渲染watcher、用户定义的watcher、计算属性watcher
+
+*/
+
 let id = 0
 class Watcher {
   constructor(vm, expOrFn, cd, options) {
@@ -12,31 +17,32 @@ class Watcher {
     this.deps = []
     this.depsId = new Set;
 
+    this.lazy = this.dirty = this.options.lazy;//表示是计算属性watcher
+    this.user = this.options.user;//表示是用户定义的watcher
+    //判断是表达式还是函数，表达式就包装成函数
     if (typeof expOrFn == 'function') {
       this.getter = expOrFn;
     } else {
       this.getter = () => util.getValue(vm, expOrFn);
     }
-
-    if (this.options.user) {
-      this.user = this.options.user
-    }
-
-    this.value = this.get()
+    this.value = this.lazy ? undefined : this.get();//计算属性默认不去求值
   }
   get() {
     let value
     pushTarget(this)
-    value = this.getter()
+    value = this.getter.call(this.vm, this.vm)
     popTarget(this)
     return value
   }
   update() {
-    // console.log('queueWatcher')
     //向队列中推入这个watcher
     queueWatcher(this)
+    //如果是计算属性，更新之后重新求值
+    if (this.lazy) {
+      this.dirty = true;
+    }
   }
-  
+
   addDep(dep) {
     if (!this.depsId.has(dep.id)) {
       this.deps.push(dep);
@@ -49,9 +55,22 @@ class Watcher {
   run() {
     let value = this.get()
     const oldValue = this.value
-    this.value=value;
+    this.value = value;
     if (this.user) {
       this.cd.call(this.vm, value, oldValue)
+    }
+  }
+
+  //计算
+  evaluate() {
+    this.value = this.get();
+    this.dirty = false;
+
+  }
+
+  depend() {
+    for (let i = 0; i < this.deps.length; i++) {
+      this.deps[i].depend()
     }
   }
 }

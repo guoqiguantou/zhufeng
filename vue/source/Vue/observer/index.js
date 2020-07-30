@@ -1,4 +1,6 @@
 import Observer from './observer'
+import Watcher from './watcher';
+import Dep from './dep';
 
 export function initState(vm) {
     let opts=vm.$options;
@@ -7,7 +9,7 @@ export function initState(vm) {
         initData(vm)
     }
     if(opts.computed){
-        initComputed()
+        initComputed(vm)
     }
     if(opts.watch){
         initWatch(vm)
@@ -48,10 +50,24 @@ function initData(vm){
     observer(data)
 }
 
-//初始化计算属性
-function initComputed(){
 
+//初始化计算属性
+function initComputed(vm){
+    let computed=vm._computed=vm.$options.computed;
+    for(let key in computed){
+        //创建一个watcher啥也不干，只设置了lazy属性
+        let watcher=new Watcher(vm,computed[key],()=>{},{lazy:true})//表示是计算属性的watcher
+        vm._computed[key]=watcher
+        Object.defineProperty(vm,key,{
+            get:creatComputedWatch(vm,key,computed[key])
+        })
+    }
 }
+/*
+计算属性watcher的特点
+1) 首次不计算，页面上用到的是时候 才会计算
+2) 有懒加载，计算过之后，会直接拿以前旧的值，只有当依赖的值改变的时候，才会去计算新的value
+*/
 
 //初始化watch
 function initWatch(vm){
@@ -61,7 +77,31 @@ function initWatch(vm){
     }
 }
 
-//创建watch
+//创建用户watch
 function createWatcher(vm, key, handler){
     return vm.$watch(key, handler)
 }
+
+//创建计算属性watch
+function creatComputedWatch(vm,key,handle){
+    //当也去去访问fullName时
+    return function(){
+        let watcher=vm._computed[key];//获取属性对应的watcher
+        if(watcher){
+            if(watcher.dirty){//如果watch的dirty是true 就去求值，否则拿上次的值
+                console.log('重新求值')
+                watcher.evaluate()
+            }
+            //重新指向渲染watcher
+            //这个watcher的deps里面存着firstName和lastName的dep,让这个dep里面存入渲染watcher
+            if(Dep.target){
+                for(let i=0;i<  watcher.deps.length;i++){
+                    watcher.deps[i].depend()
+                }
+            }
+        }
+        
+        return watcher.value 
+    }
+}
+
