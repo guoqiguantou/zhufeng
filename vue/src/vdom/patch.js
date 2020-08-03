@@ -114,16 +114,20 @@ function updateChildren(el,oldChildren,newChildren){
             oldEndVNode=oldChildren[--oldEndIndex];
             newEndVNode=newChildren[--newEndIndex];
         }else if(sameVNode(oldStartVNode,newEndVNode)){
-            // patch(oldStartVNode,newEndVNode)
-            el.insertBefore(oldStartVNode.el,oldEndVNode.el.nextSiblings)
+            patch(oldStartVNode,newEndVNode)
+            el.insertBefore(oldStartVNode.el,oldEndVNode.el.nextSibling)
             oldStartVNode=oldChildren[++oldStartIndex];
             newEndVNode=newChildren[--newEndIndex];
-            console.log(oldStartIndex)
+        }else if(sameVNode(oldEndVNode,newStartVNode)){
+            patch(oldEndVNode,newStartVNode);
+            el.insertBefore(oldEndVNode.el,oldStartVNode.el);
+            oldEndVNode=oldChildren[--oldEndIndex];
+            newStartVNode=newChildren[++newStartIndex];
         }
     }
-
-    if(newStartIndex<=newEndIndex){
-        for(let i=newStartIndex;i<=newEndIndex;i++){
+    //
+    if(newStartIndex<newEndIndex){
+        for(let i=newStartIndex+1;i<=newEndIndex;i++){
             let ele=newChildren[newEndIndex+1]?newChildren[newEndIndex+1].el:null
             el.insertBefore(createElement(newChildren[i]),ele)
         }

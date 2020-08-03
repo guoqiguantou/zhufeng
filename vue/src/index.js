@@ -6,14 +6,16 @@ let oldNode = h('div', { class: 'red' },
     h('p', { key: 'a', style: { color: 'green' } }, 'a'),
     h('p', { key: 'b', style: { color: 'blue' } }, 'b'),
     h('p', { key: 'c', style: { color: 'red' } }, 'c'),
+    h('p', { key: 'd', style: { color: 'pink' } }, 'd'),
 )
 render(oldNode, app)
 let newNode = h('div', { class: 'blue' },
-    // h('p', { key: 'd', style: { color: 'pink' } }, 'd'),
+h('p', { key: 'e', style: { color: 'yellow' } }, 'e'),
+    h('p', { key: 'd', style: { color: 'pink' } }, 'd'),
     h('p', { key: 'c', style: { color: 'red' } }, 'c'),
     h('p', { key: 'b', style: { color: 'blue' } }, 'b'),
-    h('p', { key: 'a', style: { color: 'red' } }, 'a'),
-
+    h('p', { key: 'a', style: { color: 'green' } }, 'a'),
+   
 
 
 
