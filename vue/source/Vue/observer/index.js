@@ -82,7 +82,7 @@ function createWatcher(vm, key, handler){
     return vm.$watch(key, handler)
 }
 
-//创建计算属性watch
+//创建计算属性watch的get
 function creatComputedWatch(vm,key,handle){
     //当也去去访问fullName时
     return function(){
