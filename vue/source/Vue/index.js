@@ -36,14 +36,14 @@ Vue.prototype._render=function(){
 //更新
 Vue.prototype._update = function (vNode) {
     let vm=this;
-    let oldVNode=vm.oldVnode
+    let oldVNode=vm.oldVNode
     vm.oldVNode=vNode;
     if(oldVNode){
         vm.$el=patch(oldVNode,vNode)
     }else{
         vm.$el=render(vNode,vm.$el)
     }
-
+    
     //创建dom碎片
     // let fragment = document.createDocumentFragment();
     // let first;
