@@ -1,4 +1,6 @@
 import { vnode } from './createElement'
+
+//生成虚拟dom
 function h(tag, props, ...children) {
     let { key } = props;
     delete props.key;
@@ -9,7 +11,6 @@ function h(tag, props, ...children) {
             return item
         }
     })
-    
     return vnode(tag, props, key, children, undefined)
 }
 
