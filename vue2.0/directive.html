@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="app">
+        <h3>v-once 只会渲染一次，之后会被设置成静态节点，不再重新渲染，以此来节省性能</h3>
+        <p v-once>{{msg}}</p>
+        <h3>v-html 等价于innerHTML,内容会作为普通html插入，不会再编译，原先里面的子节点直接被html替换掉，危险xss攻击需要放信任的内容</h3>
+        <p v-html="myDiv"></p>
+        <h3>v-text 等价于{{}}</h3>
+        <p v-text="msg"></p>
+        <h3>v-show通过控制css display:none让元素隐藏 元素里面的逻辑还是会执行</h3>
+        <p v-show="false">
+            <span v-for="item in 4">{{item}}</span>
+        </p>
+        <h3>v-if 通过控制节点是否渲染 让元素隐藏 ，里面的逻辑不会执行</h3>
+        <p v-if="false">
+            <span v-for="item in 4">{{item}}</span>
+        </p>
+        <h3>v-for 可以遍历数组 对象 数字 字符串，key不要用索引 避免跟别的循环的key一样，可以使用标识，但是标识加索引 没有办法解决倒序的问题，还是要用唯一</h3>
+        <p v-for="item in 4" :key="item" v-if="item%2">{{item}}</p>
+        <!-- <p v-for="item in 4" :key="item">{{item}}</p> -->
+        <h3>v-for和v-if一起用的时候，v-for的优先级会高于v-if,一起用会造成性能浪费 可以使用计算属性 计算好再循环</h3>
+        <!-- arr.map(item=>{
+            return flag?item:''
+        }) -->
+
+    </div>
+    <script src="node_modules/vue/dist/vue.js"></script>
+    <script>
+        let vm = new Vue({
+            el: '#app',
+            data() {
+                return {
+                    msg: '第一个msg',
+                    myDiv: "<div>我是v-html的div{{mag}}</div>"
+                }
+            },
+        })
+        vm.msg = "第二个msg"
+        //vue指令
+        /*
+        1) v-once
+        2) v-html
+        3) v-text
+        4) v-html
+        5) v-show
+        6) v-if v-else v-else-if
+        7) v-for
+        */
+    </script>
+
+
+</body>
+
+</html>
