@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+    <div id="app">
+      <p>{{msg}}</p>
+      <p ref="aa">{{com}}</p>
+      <span ref="sp">
+        <a href="#">{{obj.name}}</a>
+        <i>{{obj.age}}</i>
+      </span>
+      <h3>{{arr}}</h3>
+    </div>
+    <script src="node_modules/vue/dist/vue.js"></script>
+    <script>
+      let vm=new Vue({
+        // el:'#app',
+        template:'<div>template</div>',
+        data(){
+          return {
+            msg:'msg',
+            obj:{
+              name:'沙漠'
+            },
+            arr:[1,2,3,4]
+          }
+        },
+        props:{
+          name:'string'
+        },
+        computed:{
+          com:function(){
+            return this.msg+'22222222';
+          }
+        }
+      })
+      setTimeout(function(){
+        vm.obj.name='小王子'
+        vm.$set(vm.obj,'age',12)
+        vm.$delete(vm.arr,2)
+        vm.$emit('nameChange',44)
+      },1000)
+
+      setTimeout(function(){
+        vm.$off('nameChange')
+        vm.$emit('nameChange','第二次')
+      },2000)
+
+      vm.$watch('obj.name',function(newValue,oldValue){
+        console.log(newValue,oldValue)
+      },{immediate:true})
+
+      vm.$on('nameChange',function(value){
+        console.log('name改变了',value)
+      })
+      
+      // vm.$mount() 
+      // document.body.appendChild(vm.$el)
+      console.log(vm.$el)
+      /*
+      vue中的实例属性和方法
+      1)属性 
+      vm.$data(观察过的data) 
+      vm.$props (组件接受的props对象，代理过的)
+      vm.$attr (组件接受的props对象里面没有被props声明的；class和style除外)
+      vm.$listeners()
+      vm.$el(对应的真实dom) 
+      vm.$refs(对象，注册过ref的所有dom元素和实例) 
+      vm.$options(初始化传入的参数和vue内置的属性)
+
+      2)方法 
+      vm.$watch() //监听属性 
+        vm.$watch(expOrFn,callBack,[options]) expOrFn 表达式或者函数  callBack回调(新值和旧值) options(deep,immediate)
+        watch默认不会执行 immediate可以设置默认执行
+      vm.$set() //设置值 vm.$set(target,key/index,value)
+      vm.$delete //删除值 vm.$delete(target,key/index)
+
+      //发布订阅
+      vm.$on()  //监听自定义事件 (string,callBack)  订阅
+      vm.$once() //监听自定义事件 (string,callBack) 只监听一次 订阅一次
+      vm.$emit() //发布 (string,args)
+      vm.$off()   //取消监听 (string,callBack) 不传参取消所有
+
+      vm.$mount() //挂载 [elementOrSelector] 
+        如果没有实例化时没有传入el，此时处于未挂载阶段，需要mount挂载 如果没有传入 elementOrSelector，需要手动dom挂载
+      vm.$nextTick()  
+      vm.$forceUpdate() //重新渲染
+      vm.destroy()
+      
+
+      
+      */
+    </script>
+</body>
+</html>
