@@ -9,6 +9,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "animate.css": "^4.1.0",
+    "moment": "^2.27.0",
     "vue": "^2.6.11"
   }
 }

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <div id="app">{{msg}}</div>
+  <script src="node_modules/vue/dist/vue.js"></script>
+  <script>
+    //1、生命周期
+    /*
+    beforeCreate  初始化父子关系 初始化事件
+    created   初始化数据 观察数据
+    beforeMount   
+    mounted
+
+    */
+    let vm = new Vue({
+      el: '#app',
+      render(h){
+        return h('div',this.msg)
+      },
+      data() {
+        return {
+          msg: 'msg11111'
+        }
+      },
+      methods: {
+        say() {
+          console.log('say')
+        }
+      },
+      beforeCreate() {
+        console.log(this)
+      },
+      created(){
+        console.log(this)
+      },
+      beforeMount(){
+        console.log('beforeMount')
+      },
+      mounted(){
+        console.log('mounted')
+      },
+      beforeUpdate(){
+        console.log('beforeUpdate')
+      }
+    })
+    // vm.$mount()
+  </script>
+</body>
+
+</html>

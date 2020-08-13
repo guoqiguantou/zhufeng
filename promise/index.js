@@ -21,13 +21,13 @@ let p1 = promise.then(data => {
     // return 12
     // return p1
     return new Promise((resolve, reject) => {
-        reject( new Promise(()=>{
-            setTimeout(function(){
-                reject('23444')
-            },1000)
+        // reject( new Promise(()=>{
+        //     setTimeout(function(){
+        //         reject('23444')
+        //     },1000)
             
-        }))
-        // setTimeout(() => { reject('122') }, 3000)
+        // }))
+        setTimeout(() => { reject('122') }, 3000)
     })
 
 })

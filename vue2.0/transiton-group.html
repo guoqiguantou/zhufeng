@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="node_modules/animate.css/source/animate.css">
+  <style>
+    * {
+      margin: 0px;
+      padding: 0px;
+    }
+
+    li {
+      width: 200px;
+      background-color: pink;
+      line-height: 25px;
+      list-style: none;
+    }
+  </style>
+
+</head>
+
+<body>
+  <div id="app">
+    <input type="text" v-model='input'>
+    <ul>
+      <transition-group enter-active-class="animated bounceInLeft" leave-active-class="animated bounceOutRight">
+        <li v-for="item in list" :key="item">{{item}}</li>
+      </transition-group>
+    </ul>
+  </div>
+  <script src="node_modules/vue/dist/vue.js"></script>
+  <script>
+    //多元素动画
+    let vm = new Vue({
+      el: '#app',
+      data() {
+        return {
+          input: '',
+          arr: ['acb', 'ss', '122sss', 'der']
+        }
+      },
+      computed: {
+        list() {
+          return this.arr.filter(item => {
+            return item.indexOf(this.input) > -1
+          })
+        }
+      }
+    })
+  </script>
+</body>
+
+</html>

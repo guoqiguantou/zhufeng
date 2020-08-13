@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <div id="app">{{msg}}
+    <p>{{data|formatValue('YYYY-MM-DD')}}</p>
+  </div>
+  <script src="node_modules/vue/dist/vue.js"></script>
+  <script src="node_modules/moment/moment.js"></script>
+  <script>
+    // 过滤器分为全局过滤器和局部过滤器
+    // 过滤器里面拿不到this，
+    // 参数，第一个过滤器参数，后面依次是函数参数
+    let vm = new Vue({
+      el: '#app',
+      filters: {
+        formatValue(value, format) {
+          return  moment().format(format);;
+        }
+      },
+      data() {
+        return {
+          msg: 'msg',
+          data: '1221231345321'
+        }
+      },
+    })
+  </script>
+</body>
+
+</html>
