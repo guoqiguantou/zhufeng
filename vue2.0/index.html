@@ -1,27 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
 </head>
+
 <body>
-    <div id="app">{{msg}}</div>
-    <script src="node_modules/vue/dist/vue.js"></script>
-    <script>
-      let vm=new Vue({
-        el:'#app',
-        // render:function(h){
-        //   return h('div',[this.msg,this.msg])
-        // },
-        template:'<div>1111111</div>',
-        data(){
-          return {
-            msg:'msg'
-          }
-        },
-      })
-      //render 优先于 template 优先于 el
-    </script>
+  <div id="app">
+    <p>{{msg}}</p>
+    <p>{{obj.name}}</p>
+    <p>{{obj.age}}</p>
+    <p>{{arr}}</p>
+
+  </div>
+  <script src="node_modules/vue/dist/vue.js"></script>
+  <script>
+    let vm = new Vue({
+      el: '#app',
+      // render:function(h){
+      //   return h('div',[this.msg,this.msg])
+      // },
+      // template:'<div>1111111</div>',
+      data() {
+        return {
+          msg: 'msg',
+          obj: {
+            name: '我的名字'
+          },
+          arr: [1, 2, 3, 4]
+        }
+      },
+    })
+
+    setTimeout(function () {
+      vm.obj.age = 11
+      vm.arr[2] = 99
+    }, 1000)
+    //1、render 优先于 template 优先于 el
+    //2、vue中相应式的特点
+    //2.1)对象 只能监听到已经定义的 没定义的监听不到
+    //2.2)数组 只能监听方法 不能监听索引和length
+  </script>
 </body>
+
 </html>

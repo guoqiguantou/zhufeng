@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+    <div id="app">
+      <p>{{msg}}</p>
+      <p>{{obj}}</p>
+      <p>{{arr}}</p>
+    </div>
+    <script src="node_modules/vue/dist/vue.js"></script>
+    <script>
+      let vm=new Vue({
+        el:'#app',
+        // template:'<div>{{msg}}</div>',
+        data(){
+          return {
+            msg:'我是msg',
+            obj:{},
+            arr:[1,2,3,4]
+          }
+        },
+      })
+      //vue的实例属性
+      //1、$mount() 当vue实例化时没有传入el属性，此时属于未挂载阶段，$mount()可以生成$el然后需要手动挂载，也是传入#app挂载
+      //2、$options //vue实例化时传入的参数 和 vue内置的属性
+      //3、$watch() //监听属性，属性更新会批量更新 多次改变msg只会将一个watcher推入堆栈
+      //4、$set(target,key,value) $delete() 
+      //5、$nextTick() 
+
+      vm.$mount()
+      document.body.appendChild(vm.$el)
+    //   console.log(vm.$el)
+    //   console.log(vm.$options)
+
+      vm.$watch('msg',function(newValue,oldValue){
+          console.log(oldValue,newValue)
+      })
+      vm.msg='11'
+      vm.msg='111111111111'
+      vm.$set(vm.obj,'name','张三')
+      vm.$set(vm.arr,4,13)
+      vm.$delete(vm.arr,1)
+
+      vm.$nextTick(()=>{
+          console.log('更新',vm.arr)
+      })
+      console.log('同步',vm.arr)
+    </script>
+</body>
+</html>
