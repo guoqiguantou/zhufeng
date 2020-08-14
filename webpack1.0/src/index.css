@@ -1,4 +1,5 @@
 
 body{
     background: red;
+    transform: scale(0.5);
 }

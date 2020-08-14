@@ -1,8 +1,7 @@
 body {
-  background-color: aquamarine;
-
+  background: url('./doctor.jpg');
 }
 h2{
-  transform: rotate(5deg);
+  transform: rotate(20deg);
   background-color: red;
 }

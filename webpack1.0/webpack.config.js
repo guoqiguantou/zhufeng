@@ -14,14 +14,27 @@ module.exports = {
                 test: /\.css$/,
                 use: [{
                     loader:'style-loader',
-                    options:{
-                        insert:'top'
+                    // options:{
+                    //     insert:'top'
+                    // }
+                }, 'css-loader',{
+                    loader: 'postcss-loader',
+                    options: {
+                        plugins: function () {
+                            return [
+                                require('autoprefixer')({
+                                    "overrideBrowserslist": [
+                                        ">100%"
+                                    ]
+                                })
+                            ]
+                        }
                     }
-                }, 'css-loader']
+                },]
             },
             {
                 test: /\.less$/,
-                use: ['style-loader', 'css-loader', 'less-loader']
+                use: ['style-loader', 'css-loader','postcss-loader', 'less-loader']
             }
         ]
     },
