@@ -55,3 +55,11 @@ let nu:null=null;
 nu=undefined;
 
 
+//断言
+// 1、as 
+// 2、<>
+let str:any='111111'
+let strLen:number=(str as string).length;
+let strLen2:number=(<string>str).length;
+
+
