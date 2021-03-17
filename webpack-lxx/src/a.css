@@ -1,0 +1,6 @@
+@import './index.css';
+
+body{
+    color:yellow;
+    transform: scale(0.5);
+}

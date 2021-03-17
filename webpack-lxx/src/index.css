@@ -1,0 +1,8 @@
+body {
+    background: url(./img/大图.jpeg);
+    transform: scale(0.5);
+}
+
+img {
+    width: 100px;
+}
