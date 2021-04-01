@@ -16,8 +16,8 @@ function mkdirSync(url) {
     }
   })
 }
-// mkdirSync('a/b/c/d/e/f/g')
-// mkdirSync('a/b1/c1/d/e/f/g')
+mkdirSync('a/b/c/d/e/f/g')
+mkdirSync('a/b1/c1/d/e/f/g')
 
 //异步创建
 function mkdir(url, callback) {
@@ -63,11 +63,23 @@ function rmdirDir(url,callback) {
   const p = path.resolve(__dirname, url)
   const statObj = fs.statSync(p);
   if (statObj.isDirectory()) {
-
+    fs.readdir(p,(e,data)=>{
+      let dirs = data.map(dir => path.join(p, dir))
+      let index=0;
+      function next(){
+        if(index===dirs.length){
+          fs.rmdir(p,callback)
+        }else{
+          rmdirDir(dirs[index++],next)
+        }
+      }
+      next()
+    })
+    
   }else{
-
+    fs.unlink(p,callback)
   }
 }
 rmdirDir('a',()=>{
-  '成功'
+  console.log('成功')
 })
