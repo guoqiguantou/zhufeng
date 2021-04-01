@@ -7,10 +7,23 @@ const path = require('path')
 //mkdirSync 创建文件夹
 //accessSync 判断目录是否存在
 //readdirSync 读取文件子目录
-//
+//在代码运行期间最好使用异步 运行期间使用同步代码会造成阻塞问题
+
+//异步方法
+// readFile 
+// writeFile 
 
 
+// flag 
+// r 读取 
+// w 写
+// a 追加 
+// r+ 可读可写 以读为主
+// w+ 可写可读 以写为主 找不到就创建
 
+// 这种拷贝的方式 不适合大文件操作 ，
+// 因为需要先将文件读取到内存中，之后将文件写入，可能会浪费大量内存
+// 如果文件超过64k就使用流的方式，就被认为是大文件
 // //拷贝同步
 // const data = fs.readFileSync(path.resolve(__dirname, 'a.txt'), {})
 // fs.writeFileSync(path.resolve(__dirname, 'b.txt'), data, { flag: 'a' })
@@ -97,7 +110,6 @@ addDir('a/b2/c2/d2', () => {
 //2、并行执行 多个节点同时执行
 
 //广度便利
-
 function wideSync(q) {
   let arr = [q];//[a,b1,b2,c1,c2,d1,d2]
   let index = 0;
